@@ -17,4 +17,10 @@ use App\Task;
 Route::get('/tasklist', 'TaskListController@index');
 Route::get('/', 'TaskListController@getTasks');
 Route::post('/task', 'TaskListController@saveTask');
+Route::get('/edit/{task}' , 'TaskListController@editTask');
+Route::post('/update' , 'TaskListController@updateTask');
+/*Route::post('/update' ,function () {
+    $request = request(); // リクエストインスタンスを取得
+    $data = $request->all(); // 全データを連想配列で取得
+    return $data;});*/
 Route::delete('/task/{task}', 'TaskListController@deleteTask' );

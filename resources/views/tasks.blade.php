@@ -67,6 +67,17 @@
                         </button>
                         </form>
                     </td>
+                    <!-- Update Button -->
+                    <td>
+                       <!-- <form action="{{ url('task/'.$task->id) }}" method="POST">-->
+                       <form action="{{ url('edit/'.$task->id) }}" method="POST">
+                       {{ csrf_field() }}　<!-- ④ -->
+                        {{ method_field('GET') }}　<!-- ⑤ -->
+                        <button type="submit" class="btn btn-info">
+                            <i class="fa fa-automobile"></i> Update
+                        </button>
+                        </form>
+                    </td>
                     </tr>
                 @endforeach
                 </tbody>

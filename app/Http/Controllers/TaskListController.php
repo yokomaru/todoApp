@@ -68,9 +68,28 @@ class TaskListController extends Controller
         return redirect('/');
         }
 
-        public function updateTask(Task $task) {
-            $task->delete();
-   
-           return redirect('/');
-           }
+        public function editTask(Task $task) {
+        //    $tasks = Task::orderBy('created_at', 'asc')->get();
+            $tasks = Task::where('id', $task->id)->get();
+            return view('edit', [
+                'tasks' => $tasks
+            ]);
+        }
+
+        public function updateTask(Request $request) {
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|max:255',
+                ]);
+                
+            if ($validator->fails()) {
+               return redirect('/')
+                ->withInput()
+                ->withErrors($validator);
+            }
+            $tasks = new Task;
+            $tasks = Task::where('id',$request->id)->first();
+            $tasks->name = $request->name;
+            $tasks->save();
+            return redirect('/');
+        }
 }
