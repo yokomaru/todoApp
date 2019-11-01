@@ -71,9 +71,8 @@ class TaskListController extends Controller
 
         $tasks = Task::where('id', $task->id)->get();
 
-        return view('edit', [
-            'tasks' => $tasks
-        ]);
+        return view('edit', 
+        ['tasks' => $tasks]);
     }
 
     // タスク更新処理
@@ -83,7 +82,7 @@ class TaskListController extends Controller
             'name' => 'required|max:255',
             'priority' => 'required',
             'memo' => 'nullable|max:255'
-            ]);
+        ]);
 
         if ($validator->fails()) {
             return redirect('edit/'.$task->id)

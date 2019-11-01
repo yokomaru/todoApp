@@ -31,9 +31,9 @@
                                     <div class="col-sm-4">
                                         <select name="priority" class="form-control" >
                                             <option value="" @if($task->priority === '') selected  @endif>選択してください</option>
-                                            <option value="2" @if($task->priority === '2') selected  @endif>高</option>
-                                            <option value="1" @if($task->priority === '1') selected  @endif>中</option>
-                                            <option value="0" @if($task->priority === '0') selected  @endif>低</option>
+                                            <option value="2" @if($task->priority === '2') selected  @endif>high</option>
+                                            <option value="1" @if($task->priority === '1') selected  @endif>middle</option>
+                                            <option value="0" @if($task->priority === '0') selected  @endif>low</option>
                                         </select>
                                     </div>
                             </div>
