@@ -8,6 +8,99 @@ use Validator;
 
 class TaskListController extends Controller
 {
+    // 初期表示
+    // tasks ⇒ Current Tasks表示用
+    // completedtasks ⇒ Completed Tasks表示用
+    public function getTasks() {
+
+        $tasks = Task::where('isCompleted','0')->orderBy('priority', 'desc','created_at', 'asc')->get();
+        $completedtasks = Task::where('isCompleted','1')-> orderBy('priority', 'desc','created_at', 'asc')-> get();
+
+        return view('tasks',
+        ['tasks' => $tasks],
+        ['completedtasks' => $completedtasks]
+        );
+    }
+
+    // Completedボタンを押したら、完了フラグをたてる
+    public function completeTask(Task $task) {
+
+        $task = Task::where('id',$task->id)->first();
+        $task->isCompleted = '1';
+        $task->save();
+
+        // 成功アラート表示する
+        return redirect('/')->with('flash_message', 'Success save! year!!');
+    } 
+
+    // Addボタン押したらInsert
+    public function saveTask(Request $request) {
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'priority' => 'required',
+            'memo' => 'nullable|max:255'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('/')
+            ->withInput()
+            ->withErrors($validator);
+        }
+
+        $task = new Task;
+        $task->name = $request->name;
+        $task->priority = $request->priority;
+        $task->memo = $request->memo;
+        $task->isCompleted = '0';
+        $task->save();
+
+        return redirect('/')->with('flash_message', 'Success save! year!!');
+    } 
+
+    // タスク削除
+    public function deleteTask(Task $task) {
+
+        $task->delete();
+
+        return redirect('/');
+    }
+
+    // 一覧⇒編集画面への画面遷移
+    public function editTask(Task $task) {
+
+        $tasks = Task::where('id', $task->id)->get();
+
+        return view('edit', [
+            'tasks' => $tasks
+        ]);
+    }
+
+    // タスク更新処理
+    public function updateTask(Request $request,Task $task) {
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'priority' => 'required',
+            'memo' => 'nullable|max:255'
+            ]);
+
+        if ($validator->fails()) {
+            return redirect('edit/'.$task->id)
+            ->withInput()
+            ->withErrors($validator);
+        }
+
+        $tasks = new Task;
+        $tasks = Task::where('id',$task->id)->first();
+        $tasks->name = $request->name;
+        $tasks->priority = $request->priority;
+        $tasks->memo = $request->memo;
+        $tasks->save();
+        return redirect('/');
+    }
+
+    // 不要
     public function index()
     {
         $tasks = [
@@ -30,66 +123,9 @@ class TaskListController extends Controller
                 "dueDate" => "2019/10/21"
             ],
         ];
-    
+
         return view('tasklist', [
             "tasks" => $tasks
         ]);
     }
-    
-    public function getTasks() {
-        $tasks = Task::orderBy('created_at', 'asc')->get();
-        
-        return view('tasks', [
-            'tasks' => $tasks
-        ]);
-    }
-
-    public function saveTask(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|max:255',
-            ]);
-            
-            if ($validator->fails()) {
-                return redirect('/')
-                ->withInput()
-                ->withErrors($validator);
-            }
-            
-            $task = new Task;
-            $task->name = $request->name;
-            $task->save();
-            
-            return redirect('/');
-        } 
-
-        public function deleteTask(Task $task) {
-         $task->delete();
-
-        return redirect('/');
-        }
-
-        public function editTask(Task $task) {
-        //    $tasks = Task::orderBy('created_at', 'asc')->get();
-            $tasks = Task::where('id', $task->id)->get();
-            return view('edit', [
-                'tasks' => $tasks
-            ]);
-        }
-
-        public function updateTask(Request $request) {
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|max:255',
-                ]);
-                
-            if ($validator->fails()) {
-               return redirect('/')
-                ->withInput()
-                ->withErrors($validator);
-            }
-            $tasks = new Task;
-            $tasks = Task::where('id',$request->id)->first();
-            $tasks->name = $request->name;
-            $tasks->save();
-            return redirect('/');
-        }
 }

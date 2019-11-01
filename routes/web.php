@@ -14,13 +14,16 @@ use App\Task;
 //Route::get('/', function () {
 //    return view('welcome');
 //});
-Route::get('/tasklist', 'TaskListController@index');
+//Route::get('/tasklist', 'TaskListController@index');
+// 初期表示
 Route::get('/', 'TaskListController@getTasks');
+// タスク新規追加
 Route::post('/task', 'TaskListController@saveTask');
+// タスク編集画面遷移
 Route::get('/edit/{task}' , 'TaskListController@editTask');
-Route::post('/update' , 'TaskListController@updateTask');
-/*Route::post('/update' ,function () {
-    $request = request(); // リクエストインスタンスを取得
-    $data = $request->all(); // 全データを連想配列で取得
-    return $data;});*/
+// タスク更新
+Route::post('/update/{task}' , 'TaskListController@updateTask');
+// タスク削除
 Route::delete('/task/{task}', 'TaskListController@deleteTask' );
+// タスク完了
+Route::get('/complete/{task}', 'TaskListController@completeTask' );
