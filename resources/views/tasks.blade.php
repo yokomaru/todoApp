@@ -31,9 +31,9 @@
                         <div class="col-sm-4">
                         <select name="priority" class="form-control">
                             <option value="">選択してください</option>
-                            <option value="2">高</option>
-                            <option value="1">中</option>
-                            <option value="0">低</option>
+                            <option value="2">high</option>
+                            <option value="1">middle</option>
+                            <option value="0">low</option>
                             </select>
                         </div>
                     </div>
@@ -42,6 +42,13 @@
                         <label for="task-memo" class="col-sm-3 control-label">Memo</label>
                         <div class="col-sm-6">
                             <input type="text" name="memo" id="task-memo" class="form-control">
+                        </div>
+                    </div>
+                    <!-- curendder  -->
+                    <div class="form-group">
+                        <label for="task-memo" class="col-sm-3 control-label">duedate</label>
+                        <div class="col-sm-6">
+                        <input type="text" id="datepicker" class="form-control" >
                         </div>
                     </div>
                     <!-- Add Task Button -->
@@ -100,16 +107,6 @@
                                         @endif
                                         </label>
                                     </td>
-                                    <!-- Delete Button -->
-                                    <td>
-                                        <form action="{{ url('task/'.$task->id) }}" method="POST">
-                                            {{ csrf_field() }}
-                                            {{ method_field('DELETE') }}
-                                        <button type="submit" class="btn btn-danger">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                        </form>
-                                    </td>
                                     <td>
                                     <!-- Completed Button -->
                                         <form action="{{ url('complete/'.$task->id) }}" method="POST">
@@ -117,6 +114,16 @@
                                             {{ method_field('GET') }}
                                         <button type="submit" class="btn btn-success">
                                             <i class="fa fa-check"></i>
+                                        </button>
+                                        </form>
+                                    </td>
+                                    <!-- Delete Button -->
+                                    <td>
+                                        <form action="{{ url('task/'.$task->id) }}" method="POST">
+                                            {{ csrf_field() }}
+                                            {{ method_field('DELETE') }}
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="fa fa-trash"></i>
                                         </button>
                                         </form>
                                     </td>
@@ -134,35 +141,19 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-center">
+                        {{ $tasks->links() }}
+                    </div>
                 </div>
             </div>
             @endif
-
-        <!-- Completed Tasks -->
-            @if (count($completedtasks) > 0)
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        Completed Tasks
-                    </div>
-                    <div class="panel-body">
-                        <table class="table table-striped task-table">
-                            <thead>
-                                <th class="col-xs-6">Task</th>
-                            </thead>
-                            <tbody>
-                                @foreach($completedtasks as $task)
-                                    <tr>
-                                        <!-- Task Name -->
-                                        <td class="table-text">
-                                            <div>{{ $task->name }}</div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            @endif
-        </div>
     </div>
+
+
+<script>
+    $('#datepicker').datepicker({
+        dateFormat: 'yy/mm/dd',
+    });
+</script>
+
 @endsection

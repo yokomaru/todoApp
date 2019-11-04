@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Task;
 use Validator;
 
+
 class TaskListController extends Controller
 {
     // 初期表示
@@ -13,12 +14,11 @@ class TaskListController extends Controller
     // completedtasks ⇒ Completed Tasks表示用
     public function getTasks() {
 
-        $tasks = Task::where('isCompleted','0')->orderBy('priority', 'desc','created_at', 'asc')->get();
-        $completedtasks = Task::where('isCompleted','1')-> orderBy('priority', 'desc','created_at', 'asc')-> get();
-
+        $tasks = Task::orderBy('priority', 'desc','created_at', 'asc')-> paginate(10);
+        //$completedtasks = Task::where('status','1')-> orderBy('priority', 'desc','created_at', 'asc')-> paginate(5);
         return view('tasks',
         ['tasks' => $tasks],
-        ['completedtasks' => $completedtasks]
+        //['completedtasks' => $completedtasks]
         );
     }
 
@@ -26,7 +26,7 @@ class TaskListController extends Controller
     public function completeTask(Task $task) {
 
         $task = Task::where('id',$task->id)->first();
-        $task->isCompleted = '1';
+        $task->status = '1';
         $task->save();
 
         // 成功アラート表示する
@@ -52,7 +52,7 @@ class TaskListController extends Controller
         $task->name = $request->name;
         $task->priority = $request->priority;
         $task->memo = $request->memo;
-        $task->isCompleted = '0';
+        $task->status = '0';
         $task->save();
 
         return redirect('/')->with('flash_message', 'Success save! year!!');
